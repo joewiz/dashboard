@@ -212,7 +212,18 @@ class ExistdbDashboard extends LitElement {
     this._drawerOpen = false
   }
 
-  _logout() {
+  async _logout() {
+    try {
+      // POST logout to clear the persistent login cookie
+      await fetch('/exist/apps/dashboard/login', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ logout: 'true' }),
+      })
+    } catch (e) {
+      // Proceed with redirect even if the POST fails
+    }
     window.location.href = 'index.html?logout=true'
   }
 

@@ -12,14 +12,6 @@ declare variable $exist:controller external;
 declare variable $exist:prefix external;
 declare variable $exist:root external;
 
-(:
-let $log := util:log("info", "path " || $exist:path)
-let $log := util:log("info", "resource " || $exist:resource)
-let $log := util:log("info", "controller " || $exist:controller)
-let $log := util:log("info", "")
-
-return
-:)
 if ($exist:path eq '') then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <redirect url="{request:get-uri()}/"/>
@@ -53,42 +45,65 @@ else if ($exist:resource eq 'login') then
             <status>{$err:description}</status>
         }
     )
+
+(: Admin dashboard :)
 else if ($exist:path = "/admin") then (
     login:set-user("org.exist.login", xs:dayTimeDuration("P7D"), true()),
     let $user := request:get-attribute("org.exist.login.user")
-
     let $route := request:get-parameter("route","")
-    (:
-    let $log := util:log("info", "path " || $exist:path)
-    let $log := util:log("info", "route " || $route)
-    let $log := util:log("info", "login matched " || $exist:controller)
-    :)
-
     return
-    if($user and sm:is-dba($user)) then(
-
-(:
-        let $log := util:log("info", "user is dba")
-        let $log := util:log("info", "effective " || request:get-uri())
-        let $log := util:log("info", "uri " || request:get-uri())
-        let $log := util:log("info", "pathinfo " || request:get-path-info())
-        let $log := util:log("info", "url " || request:get-url())
-        return
-:)
-
-
+    if($user and sm:is-dba($user)) then
         <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
             <forward url="admin.xql?route={$route}">
                 <cache-control cache="no"/>
                 <set-header name="Cache-Control" value="no-cache"/>
             </forward>
         </dispatch>
-    ) else (
+    else
         <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
           <redirect url="index.html"/>
         </dispatch>
+)
+
+(: User Manager API - forward to modules/usermanager :)
+else if (starts-with($exist:path, "/usermanager/")) then (
+    login:set-user("org.exist.login", xs:dayTimeDuration("P7D"), true()),
+    let $user := request:get-attribute("org.exist.login.user")
+    return
+    if ($user and sm:is-dba($user)) then
+        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+            <forward url="modules/usermanager/controller.xql">
+                <set-header name="Cache-Control" value="no-cache"/>
+            </forward>
+        </dispatch>
+    else (
+        response:set-status-code(403),
+        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+            <ignore/>
+        </dispatch>
     )
 )
+
+(: Backup API - forward to modules/backup :)
+else if (starts-with($exist:path, "/backup/")) then (
+    login:set-user("org.exist.login", xs:dayTimeDuration("P7D"), true()),
+    let $user := request:get-attribute("org.exist.login.user")
+    return
+    if ($user and sm:is-dba($user)) then
+        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+            <forward url="modules/backup/controller.xql">
+                <set-header name="Cache-Control" value="no-cache"/>
+            </forward>
+        </dispatch>
+    else (
+        response:set-status-code(403),
+        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+            <ignore/>
+        </dispatch>
+    )
+)
+
+(: Static resources and everything else :)
 else
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <cache-control cache="yes"/>

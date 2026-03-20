@@ -18,30 +18,35 @@ class ExistdbLauncher extends LitElement {
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
-      align-items: center;
+      align-items: flex-start;
+      padding: 10px;
     }
     .apps repo-app {
-      width: 150px;
-      height: 150px;
+      width: 110px;
+      height: 110px;
       position: relative;
       cursor: pointer;
-      margin: 10px;
+      margin: 8px;
+    }
+    .apps repo-app:hover {
+      opacity: 0.8;
     }
     .apps repo-title {
-      font-size: 12px;
+      font-size: 11px;
       display: block;
       position: absolute;
-      bottom: 4px;
-      left: 0px;
+      bottom: 0;
+      left: 0;
       width: 100%;
       text-align: center;
-      height: 36px;
-      text-shadow: -2px 2px 2px rgba(108, 98, 98, 0.3);
+      height: 30px;
+      line-height: 14px;
+      overflow: hidden;
       color: var(--paper-grey-900, #212121);
     }
     .apps repo-icon {
       width: 100%;
-      height: calc(100% - 36px);
+      height: calc(100% - 30px);
       display: block;
       background-size: contain;
       background-repeat: no-repeat;
@@ -113,6 +118,15 @@ class ExistdbLauncher extends LitElement {
     const icons = this.shadowRoot.querySelectorAll('repo-icon[src]')
     for (const icon of icons) {
       icon.style.backgroundImage = `url(${icon.getAttribute('src')})`
+    }
+
+    // Make apps clickable
+    const allApps = this.shadowRoot.querySelectorAll('repo-app')
+    for (const app of allApps) {
+      app.addEventListener('click', () => {
+        const path = app.getAttribute('path')
+        if (path) window.location.href = path
+      })
     }
 
     // Filter out ignored apps

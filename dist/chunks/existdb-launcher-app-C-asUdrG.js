@@ -145,30 +145,35 @@ var e=globalThis,t=e.ShadowRoot&&(e.ShadyCSS===void 0||e.ShadyCSS.nativeShadow)&
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
-      align-items: center;
+      align-items: flex-start;
+      padding: 10px;
     }
     .apps repo-app {
-      width: 150px;
-      height: 150px;
+      width: 110px;
+      height: 110px;
       position: relative;
       cursor: pointer;
-      margin: 10px;
+      margin: 8px;
+    }
+    .apps repo-app:hover {
+      opacity: 0.8;
     }
     .apps repo-title {
-      font-size: 12px;
+      font-size: 11px;
       display: block;
       position: absolute;
-      bottom: 4px;
-      left: 0px;
+      bottom: 0;
+      left: 0;
       width: 100%;
       text-align: center;
-      height: 36px;
-      text-shadow: -2px 2px 2px rgba(108, 98, 98, 0.3);
+      height: 30px;
+      line-height: 14px;
+      overflow: hidden;
       color: var(--paper-grey-900, #212121);
     }
     .apps repo-icon {
       width: 100%;
-      height: calc(100% - 36px);
+      height: calc(100% - 30px);
       display: block;
       background-size: contain;
       background-repeat: no-repeat;
@@ -188,7 +193,7 @@ var e=globalThis,t=e.ShadowRoot&&(e.ShadyCSS===void 0||e.ShadyCSS.nativeShadow)&
     [hidden] {
       display: none;
     }
-  `;constructor(){super(),this.ignores=[],this.path=void 0,this.basePath=``}connectedCallback(){if(super.connectedCallback(),this.path==null)this.basePath=`..`;else{let e=window.location.pathname;this.basePath=e.substring(0,e.indexOf(this.path))}this._loadApplications()}async _loadApplications(){try{let e=await fetch(`${this.basePath}/packageservice/packages/apps`,{method:`GET`,credentials:`same-origin`});if(e.ok){let t=await e.text();this._displayApplications(t)}}catch(e){console.warn(`Failed to load applications:`,e)}}_displayApplications(e){let t=this.shadowRoot.querySelector(`#apps`);if(t.innerHTML=e,!this._isEmbedded()){let e=document.createElement(`existdb-branding`),n=t.querySelector(`repo-packages`);n&&n.insertBefore(e,n.querySelector(`repo-app`))}let n=this.shadowRoot.querySelectorAll(`repo-icon[src]`);for(let e of n)e.style.backgroundImage=`url(${e.getAttribute(`src`)})`;let r=this.shadowRoot.querySelectorAll(`repo-app`);for(let e=0;e<r.length;e++){let t=r[e].getAttribute(`abbrev`);this.ignores&&this.ignores.indexOf(t)!==-1&&(r[e].style.display=`none`)}}_isEmbedded(){return document.querySelector(`existdb-dashboard`)!=null}render(){return V`
+  `;constructor(){super(),this.ignores=[],this.path=void 0,this.basePath=``}connectedCallback(){if(super.connectedCallback(),this.path==null)this.basePath=`..`;else{let e=window.location.pathname;this.basePath=e.substring(0,e.indexOf(this.path))}this._loadApplications()}async _loadApplications(){try{let e=await fetch(`${this.basePath}/packageservice/packages/apps`,{method:`GET`,credentials:`same-origin`});if(e.ok){let t=await e.text();this._displayApplications(t)}}catch(e){console.warn(`Failed to load applications:`,e)}}_displayApplications(e){let t=this.shadowRoot.querySelector(`#apps`);if(t.innerHTML=e,!this._isEmbedded()){let e=document.createElement(`existdb-branding`),n=t.querySelector(`repo-packages`);n&&n.insertBefore(e,n.querySelector(`repo-app`))}let n=this.shadowRoot.querySelectorAll(`repo-icon[src]`);for(let e of n)e.style.backgroundImage=`url(${e.getAttribute(`src`)})`;let r=this.shadowRoot.querySelectorAll(`repo-app`);for(let e of r)e.addEventListener(`click`,()=>{let t=e.getAttribute(`path`);t&&(window.location.href=t)});let i=this.shadowRoot.querySelectorAll(`repo-app`);for(let e=0;e<i.length;e++){let t=i[e].getAttribute(`abbrev`);this.ignores&&this.ignores.indexOf(t)!==-1&&(i[e].style.display=`none`)}}_isEmbedded(){return document.querySelector(`existdb-dashboard`)!=null}render(){return V`
       <div id="apps" class="apps"></div>
     `}};customElements.define(`existdb-launcher`,he);var ge=class extends ${static properties={ignores:{type:Array},path:{type:String}};static styles=o`
     :host {
