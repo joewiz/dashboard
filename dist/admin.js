@@ -1,4 +1,4 @@
-import{n as e,r as t,t as n}from"./chunks/existdb-launcher-app-BdnFvJo-.js";var r=class extends n{static properties={service:{type:String,reflect:!0},autoLoad:{type:Boolean,attribute:`auto-load`},count:{type:Number,reflect:!0},_loading:{type:Boolean,state:!0}};static styles=t`
+import{n as e,r as t,t as n}from"./chunks/existdb-launcher-app-CABln-uz.js";var r=class extends n{static properties={service:{type:String,reflect:!0},autoLoad:{type:Boolean,attribute:`auto-load`},count:{type:Number,reflect:!0},_loading:{type:Boolean,state:!0}};static styles=t`
     :host {
       position: relative;
       background: whitesmoke;
@@ -1368,17 +1368,23 @@ import{n as e,r as t,t as n}from"./chunks/existdb-launcher-app-BdnFvJo-.js";var 
       text-align: center;
       padding: 16px;
       border-bottom: 1px solid #e0e0e0;
+      overflow: hidden;
     }
 
     .drawer-header img {
       width: 134px;
+      max-width: 100%;
     }
 
     .drawer-header existdb-version {
-      font-size: small;
+      font-size: 11px;
       display: block;
-      margin-top: -6px;
+      margin-top: -4px;
       margin-bottom: 6px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 224px;
     }
 
     .drawer-header .subitem {

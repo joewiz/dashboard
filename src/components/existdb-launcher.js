@@ -41,10 +41,11 @@ class ExistdbLauncher extends LitElement {
     }
     .apps repo-icon {
       width: 100%;
-      height: 100%;
-      vertical-align: middle;
-      display: table-cell;
-      background: transparent;
+      height: calc(100% - 36px);
+      display: block;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
     }
     .apps repo-name,
     .apps repo-version,
@@ -108,7 +109,13 @@ class ExistdbLauncher extends LitElement {
       }
     }
 
-    // filter out ignored apps
+    // Render icons from repo-icon src attributes
+    const icons = this.shadowRoot.querySelectorAll('repo-icon[src]')
+    for (const icon of icons) {
+      icon.style.backgroundImage = `url(${icon.getAttribute('src')})`
+    }
+
+    // Filter out ignored apps
     const apps = this.shadowRoot.querySelectorAll('repo-app')
     for (let i = 0; i < apps.length; i++) {
       const abbrev = apps[i].getAttribute('abbrev')

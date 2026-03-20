@@ -145,7 +145,7 @@ class ExistdbLogin extends LitElement {
   }
 
   _confirmLogin() {
-    this._checkLogin({ user: this.user, password: this.password })
+    this._checkLogin({ user: this.user, password: this.password, duration: 'P7D' })
   }
 
   _handleResponse(data) {

@@ -13,7 +13,7 @@ return
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes"/>
     <title>existdb-dashboard</title>
     <link rel="stylesheet" href="resources/styles.css"/>
-    <script type="module" src="dist/admin.js"></script>
+    <script type="module" src="dist/admin.js">/* */</script>
 </head>
 <body>
     <existdb-dashboard path="{$route}"> </existdb-dashboard>

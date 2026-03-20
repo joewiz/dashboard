@@ -58,7 +58,7 @@ var e=globalThis,t=e.ShadowRoot&&(e.ShadyCSS===void 0||e.ShadyCSS.nativeShadow)&
     a, a:link { text-decoration: none; color: inherit; cursor: pointer; }
     #message { color: #c62828; margin-top: 8px; }
     @media (max-width: 1024px) { .label { display: none; } }
-  `;constructor(){super(),this.loggedIn=!1,this.user=``,this.group=``,this.groups=[],this.auto=!1,this.loginLabel=`Login`,this.logoutLabel=`Logout`,this.loginIcon=``,this.logoutIcon=``,this.password=``,this.loginUrl=``,this.logoutUrl=``,this._invalid=!1,this._dialogOpen=!1,this._hasFocus=!0}connectedCallback(){super.connectedCallback(),this._boundBlur=()=>{this._hasFocus=!1},this._boundFocus=()=>{this._hasFocus||(this._hasFocus=!0,this._checkLogin())},window.addEventListener(`blur`,this._boundBlur),window.addEventListener(`focus`,this._boundFocus),document.addEventListener(`checkUser`,e=>{e.detail.user===this.user&&(this.password=e.detail.password,this._confirmLogin())}),this._checkLogin()}disconnectedCallback(){super.disconnectedCallback(),window.removeEventListener(`blur`,this._boundBlur),window.removeEventListener(`focus`,this._boundFocus)}async _checkLogin(e=null){try{let t=await(await fetch(`/exist/apps/dashboard/login`,{method:`POST`,credentials:`same-origin`,headers:{"Content-Type":`application/x-www-form-urlencoded`},body:e?new URLSearchParams(e):null})).json();this._handleResponse(t)}catch(e){console.warn(`Login check failed:`,e)}}_show(e){e.preventDefault(),this.loggedIn?this._checkLogin({logout:this.user}):this._dialogOpen=!0}_confirmLogin(){this._checkLogin({user:this.user,password:this.password})}_handleResponse(e){let t=this.loggedIn;e.user&&this._checkGroup(e)?(this.loggedIn=!0,this.user=e.user,this.groups=e.groups||[],this._invalid=!1,!t&&this.loginUrl&&(window.location=this.loginUrl),this._dialogOpen=!1):(this.loggedIn=!1,this.password=``,this._dialogOpen?this._invalid=!0:this.auto?this._dialogOpen=!0:t&&this.logoutUrl&&(window.location=this.logoutUrl))}_checkGroup(e){return this.group?e.groups&&e.groups.indexOf(this.group)>-1:!0}_handleKeyup(e){e.keyCode===13&&this._confirmLogin()}_onUserInput(e){this.user=e.target.value}_onPasswordInput(e){this.password=e.target.value}render(){return V`
+  `;constructor(){super(),this.loggedIn=!1,this.user=``,this.group=``,this.groups=[],this.auto=!1,this.loginLabel=`Login`,this.logoutLabel=`Logout`,this.loginIcon=``,this.logoutIcon=``,this.password=``,this.loginUrl=``,this.logoutUrl=``,this._invalid=!1,this._dialogOpen=!1,this._hasFocus=!0}connectedCallback(){super.connectedCallback(),this._boundBlur=()=>{this._hasFocus=!1},this._boundFocus=()=>{this._hasFocus||(this._hasFocus=!0,this._checkLogin())},window.addEventListener(`blur`,this._boundBlur),window.addEventListener(`focus`,this._boundFocus),document.addEventListener(`checkUser`,e=>{e.detail.user===this.user&&(this.password=e.detail.password,this._confirmLogin())}),this._checkLogin()}disconnectedCallback(){super.disconnectedCallback(),window.removeEventListener(`blur`,this._boundBlur),window.removeEventListener(`focus`,this._boundFocus)}async _checkLogin(e=null){try{let t=await(await fetch(`/exist/apps/dashboard/login`,{method:`POST`,credentials:`same-origin`,headers:{"Content-Type":`application/x-www-form-urlencoded`},body:e?new URLSearchParams(e):null})).json();this._handleResponse(t)}catch(e){console.warn(`Login check failed:`,e)}}_show(e){e.preventDefault(),this.loggedIn?this._checkLogin({logout:this.user}):this._dialogOpen=!0}_confirmLogin(){this._checkLogin({user:this.user,password:this.password,duration:`P7D`})}_handleResponse(e){let t=this.loggedIn;e.user&&this._checkGroup(e)?(this.loggedIn=!0,this.user=e.user,this.groups=e.groups||[],this._invalid=!1,!t&&this.loginUrl&&(window.location=this.loginUrl),this._dialogOpen=!1):(this.loggedIn=!1,this.password=``,this._dialogOpen?this._invalid=!0:this.auto?this._dialogOpen=!0:t&&this.logoutUrl&&(window.location=this.logoutUrl))}_checkGroup(e){return this.group?e.groups&&e.groups.indexOf(this.group)>-1:!0}_handleKeyup(e){e.keyCode===13&&this._confirmLogin()}_onUserInput(e){this.user=e.target.value}_onPasswordInput(e){this.password=e.target.value}render(){return V`
       <a href="#" id="login" @click=${this._show} title="${this.user}">
         ${this.loggedIn?V`<span class="label">${this.logoutLabel} ${this.user}</span>`:V`<span class="label">${this.loginLabel}</span>`}
       </a>
@@ -168,10 +168,11 @@ var e=globalThis,t=e.ShadowRoot&&(e.ShadyCSS===void 0||e.ShadyCSS.nativeShadow)&
     }
     .apps repo-icon {
       width: 100%;
-      height: 100%;
-      vertical-align: middle;
-      display: table-cell;
-      background: transparent;
+      height: calc(100% - 36px);
+      display: block;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
     }
     .apps repo-name,
     .apps repo-version,
@@ -187,7 +188,7 @@ var e=globalThis,t=e.ShadowRoot&&(e.ShadyCSS===void 0||e.ShadyCSS.nativeShadow)&
     [hidden] {
       display: none;
     }
-  `;constructor(){super(),this.ignores=[],this.path=void 0,this.basePath=``}connectedCallback(){if(super.connectedCallback(),this.path==null)this.basePath=`..`;else{let e=window.location.pathname;this.basePath=e.substring(0,e.indexOf(this.path))}this._loadApplications()}async _loadApplications(){try{let e=await fetch(`${this.basePath}/packageservice/packages/apps`,{method:`GET`,credentials:`same-origin`});if(e.ok){let t=await e.text();this._displayApplications(t)}}catch(e){console.warn(`Failed to load applications:`,e)}}_displayApplications(e){let t=this.shadowRoot.querySelector(`#apps`);if(t.innerHTML=e,!this._isEmbedded()){let e=document.createElement(`existdb-branding`),n=t.querySelector(`repo-packages`);n&&n.insertBefore(e,n.querySelector(`repo-app`))}let n=this.shadowRoot.querySelectorAll(`repo-app`);for(let e=0;e<n.length;e++){let t=n[e].getAttribute(`abbrev`);this.ignores&&this.ignores.indexOf(t)!==-1&&(n[e].style.display=`none`)}}_isEmbedded(){return document.querySelector(`existdb-dashboard`)!=null}render(){return V`
+  `;constructor(){super(),this.ignores=[],this.path=void 0,this.basePath=``}connectedCallback(){if(super.connectedCallback(),this.path==null)this.basePath=`..`;else{let e=window.location.pathname;this.basePath=e.substring(0,e.indexOf(this.path))}this._loadApplications()}async _loadApplications(){try{let e=await fetch(`${this.basePath}/packageservice/packages/apps`,{method:`GET`,credentials:`same-origin`});if(e.ok){let t=await e.text();this._displayApplications(t)}}catch(e){console.warn(`Failed to load applications:`,e)}}_displayApplications(e){let t=this.shadowRoot.querySelector(`#apps`);if(t.innerHTML=e,!this._isEmbedded()){let e=document.createElement(`existdb-branding`),n=t.querySelector(`repo-packages`);n&&n.insertBefore(e,n.querySelector(`repo-app`))}let n=this.shadowRoot.querySelectorAll(`repo-icon[src]`);for(let e of n)e.style.backgroundImage=`url(${e.getAttribute(`src`)})`;let r=this.shadowRoot.querySelectorAll(`repo-app`);for(let e=0;e<r.length;e++){let t=r[e].getAttribute(`abbrev`);this.ignores&&this.ignores.indexOf(t)!==-1&&(r[e].style.display=`none`)}}_isEmbedded(){return document.querySelector(`existdb-dashboard`)!=null}render(){return V`
       <div id="apps" class="apps"></div>
     `}};customElements.define(`existdb-launcher`,he);var ge=class extends ${static properties={ignores:{type:Array},path:{type:String}};static styles=o`
     :host {
@@ -215,6 +216,11 @@ var e=globalThis,t=e.ShadowRoot&&(e.ShadyCSS===void 0||e.ShadyCSS.nativeShadow)&
     .header h3 {
       margin: 0;
       font-weight: 400;
+      flex: 1;
+    }
+    .header ::slotted(existdb-login) {
+      color: white;
+      margin-right: 10px;
     }
     @media only screen and (max-width: 768px) {
       .header h3 {
@@ -225,6 +231,7 @@ var e=globalThis,t=e.ShadowRoot&&(e.ShadyCSS===void 0||e.ShadyCSS.nativeShadow)&
       <div class="header">
         <slot name="toggleIcon"></slot>
         <h3>Launcher</h3>
+        <slot></slot>
       </div>
       <existdb-launcher .ignores=${this.ignores} .path=${this.path}></existdb-launcher>
     `}};customElements.define(`existdb-launcher-app`,ge);export{V as n,o as r,$ as t};

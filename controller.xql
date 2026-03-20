@@ -33,7 +33,7 @@ else if ($exist:path = "/") then(
  : Login a user via AJAX. Just returns a 401 if login fails.
  :)
 else if ($exist:resource eq 'login') then
-    let $loggedIn := login:set-user("org.exist.login", (), false())
+    let $loggedIn := login:set-user("org.exist.login", xs:dayTimeDuration("P7D"), false())
     let $user := request:get-attribute("org.exist.login.user")
     return (
         util:declare-option("exist:serialize", "method=json"),
@@ -54,7 +54,7 @@ else if ($exist:resource eq 'login') then
         }
     )
 else if ($exist:path = "/admin") then (
-    login:set-user("org.exist.login", (), true()),
+    login:set-user("org.exist.login", xs:dayTimeDuration("P7D"), true()),
     let $user := request:get-attribute("org.exist.login.user")
 
     let $route := request:get-parameter("route","")

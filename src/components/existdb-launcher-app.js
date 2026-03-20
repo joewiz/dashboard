@@ -33,6 +33,11 @@ class ExistdbLauncherApp extends LitElement {
     .header h3 {
       margin: 0;
       font-weight: 400;
+      flex: 1;
+    }
+    .header ::slotted(existdb-login) {
+      color: white;
+      margin-right: 10px;
     }
     @media only screen and (max-width: 768px) {
       .header h3 {
@@ -52,6 +57,7 @@ class ExistdbLauncherApp extends LitElement {
       <div class="header">
         <slot name="toggleIcon"></slot>
         <h3>Launcher</h3>
+        <slot></slot>
       </div>
       <existdb-launcher .ignores=${this.ignores} .path=${this.path}></existdb-launcher>
     `
