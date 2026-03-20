@@ -365,7 +365,7 @@ class ExistdbUsermanager extends LitElement {
     this.selectedUser = null
     this.selectedGroup = null
     this.mode = 'edit'
-    this.apiBase = '/exist/apps/usermanager/'
+    this.apiBase = '/exist/apps/dashboard/bower_components/existdb-usermanager/'
     this._toastMessage = ''
     this._toastError = false
     this._toastVisible = false

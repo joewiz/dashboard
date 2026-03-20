@@ -30,11 +30,96 @@ class ExistdbPackages extends LitElement {
     }
 
     @media only screen and (max-width: 768px) {
-      .items {
-        display: block;
-      }
+      .items { display: block; }
     }
 
+    /* ---- Styling for injected repo-* elements ---- */
+
+    .items repo-packages {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .items repo-app {
+      display: block;
+      position: relative;
+      background: white;
+      margin-bottom: 2px;
+      padding: 30px 30px 30px 100px;
+      min-height: 80px;
+      width: 100%;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),
+                  0 1px 5px 0 rgba(0,0,0,0.12),
+                  0 3px 1px -2px rgba(0,0,0,0.2);
+      cursor: pointer;
+      box-sizing: border-box;
+    }
+
+    .items repo-app:hover {
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .items repo-icon {
+      position: absolute;
+      left: 20px;
+      top: 20px;
+      width: 64px;
+      height: 64px;
+      display: block;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    .items repo-title {
+      font-size: 18px;
+      font-weight: 500;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .items repo-type {
+      display: block;
+      font-size: 12px;
+      text-transform: uppercase;
+      color: var(--primary-color, #1976d2);
+      margin-bottom: 4px;
+    }
+
+    .items repo-app[type="library"] repo-type {
+      color: #388e3c;
+    }
+
+    .items repo-version {
+      display: block;
+      font-size: 12px;
+      color: #666;
+    }
+
+    /* Hide metadata by default */
+    .items repo-name,
+    .items repo-authors,
+    .items repo-author,
+    .items repo-abbrev,
+    .items repo-description,
+    .items repo-website,
+    .items repo-url,
+    .items repo-license,
+    .items repo-requires,
+    .items repo-changelog,
+    .items repo-change,
+    .items repo-other,
+    .items repo-note {
+      display: none;
+    }
+
+    [hidden] { display: none !important; }
+
+    /* ---- Spinner ---- */
     .spin-wrapper {
       position: relative;
       width: 100%;
@@ -51,9 +136,9 @@ class ExistdbPackages extends LitElement {
       padding: 10px;
       background: #eee;
       border-radius: 24px;
-      box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14),
-                  0 1px 10px 0 rgba(0, 0, 0, 0.12),
-                  0 2px 4px -1px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14),
+                  0 1px 10px 0 rgba(0,0,0,0.12),
+                  0 2px 4px -1px rgba(0,0,0,0.4);
     }
 
     .spinner::after {
@@ -69,10 +154,6 @@ class ExistdbPackages extends LitElement {
 
     @keyframes spin {
       to { transform: rotate(360deg); }
-    }
-
-    [hidden] {
-      display: none !important;
     }
   `
 
@@ -137,7 +218,22 @@ class ExistdbPackages extends LitElement {
       const itemList = this.shadowRoot.querySelector('#itemList')
       itemList.innerHTML = text
 
-      this._packages = this.shadowRoot.querySelectorAll('repo-app')
+      // Render icons from repo-icon src attributes as background images
+      const icons = itemList.querySelectorAll('repo-icon[src]')
+      for (const icon of icons) {
+        icon.style.backgroundImage = `url(${icon.getAttribute('src')})`
+      }
+
+      // Make app cards clickable — open the app URL
+      const apps = itemList.querySelectorAll('repo-app[status="installed"][type="application"]')
+      for (const app of apps) {
+        app.addEventListener('click', () => {
+          const path = app.getAttribute('path')
+          if (path) window.open(path)
+        })
+      }
+
+      this._packages = itemList.querySelectorAll('repo-app')
       this.count = this._packages.length
 
       this.dispatchEvent(new CustomEvent('packages-loaded', {

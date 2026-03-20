@@ -20,11 +20,96 @@ import{n as e,r as t,t as n}from"./chunks/existdb-launcher-app-CABln-uz.js";var 
     }
 
     @media only screen and (max-width: 768px) {
-      .items {
-        display: block;
-      }
+      .items { display: block; }
     }
 
+    /* ---- Styling for injected repo-* elements ---- */
+
+    .items repo-packages {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .items repo-app {
+      display: block;
+      position: relative;
+      background: white;
+      margin-bottom: 2px;
+      padding: 30px 30px 30px 100px;
+      min-height: 80px;
+      width: 100%;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),
+                  0 1px 5px 0 rgba(0,0,0,0.12),
+                  0 3px 1px -2px rgba(0,0,0,0.2);
+      cursor: pointer;
+      box-sizing: border-box;
+    }
+
+    .items repo-app:hover {
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .items repo-icon {
+      position: absolute;
+      left: 20px;
+      top: 20px;
+      width: 64px;
+      height: 64px;
+      display: block;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    .items repo-title {
+      font-size: 18px;
+      font-weight: 500;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .items repo-type {
+      display: block;
+      font-size: 12px;
+      text-transform: uppercase;
+      color: var(--primary-color, #1976d2);
+      margin-bottom: 4px;
+    }
+
+    .items repo-app[type="library"] repo-type {
+      color: #388e3c;
+    }
+
+    .items repo-version {
+      display: block;
+      font-size: 12px;
+      color: #666;
+    }
+
+    /* Hide metadata by default */
+    .items repo-name,
+    .items repo-authors,
+    .items repo-author,
+    .items repo-abbrev,
+    .items repo-description,
+    .items repo-website,
+    .items repo-url,
+    .items repo-license,
+    .items repo-requires,
+    .items repo-changelog,
+    .items repo-change,
+    .items repo-other,
+    .items repo-note {
+      display: none;
+    }
+
+    [hidden] { display: none !important; }
+
+    /* ---- Spinner ---- */
     .spin-wrapper {
       position: relative;
       width: 100%;
@@ -41,9 +126,9 @@ import{n as e,r as t,t as n}from"./chunks/existdb-launcher-app-CABln-uz.js";var 
       padding: 10px;
       background: #eee;
       border-radius: 24px;
-      box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14),
-                  0 1px 10px 0 rgba(0, 0, 0, 0.12),
-                  0 2px 4px -1px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14),
+                  0 1px 10px 0 rgba(0,0,0,0.12),
+                  0 2px 4px -1px rgba(0,0,0,0.4);
     }
 
     .spinner::after {
@@ -60,10 +145,6 @@ import{n as e,r as t,t as n}from"./chunks/existdb-launcher-app-CABln-uz.js";var 
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
-
-    [hidden] {
-      display: none !important;
-    }
   `;constructor(){super(),this.service=``,this.autoLoad=!1,this.count=0,this._loading=!1,this._packages=[],this._onPackageRemoved=()=>this.loadPackages(),this._onPackageInstalled=()=>this.loadPackages()}connectedCallback(){super.connectedCallback(),window.addEventListener(`package-removed`,this._onPackageRemoved),window.addEventListener(`package-installed`,this._onPackageInstalled),this.autoLoad&&this.loadPackages()}disconnectedCallback(){super.disconnectedCallback(),window.removeEventListener(`package-removed`,this._onPackageRemoved),window.removeEventListener(`package-installed`,this._onPackageInstalled)}render(){return e`
       <div class="spin-wrapper" ?hidden=${!this._loading}>
         <div class="spinner"></div>
@@ -71,7 +152,7 @@ import{n as e,r as t,t as n}from"./chunks/existdb-launcher-app-CABln-uz.js";var 
       <div id="itemList" class="items">
         <slot></slot>
       </div>
-    `}async loadPackages(){if(this.service){this._loading=!0;try{let e=await fetch(this.service,{method:`GET`,credentials:`same-origin`,headers:{Accept:`text/html`}});if(!e.ok)throw Error(`HTTP ${e.status}: ${e.statusText}`);let t=await e.text();await this.updateComplete;let n=this.shadowRoot.querySelector(`#itemList`);n.innerHTML=t,this._packages=this.shadowRoot.querySelectorAll(`repo-app`),this.count=this._packages.length,this.dispatchEvent(new CustomEvent(`packages-loaded`,{bubbles:!0,composed:!0,detail:{type:this.id}}))}catch{this.dispatchEvent(new CustomEvent(`packages-load-error`,{bubbles:!0,composed:!0,detail:{error:`loading of available packages failed`}}))}finally{this._loading=!1}}}getPackages(){return this._packages}};customElements.define(`existdb-packages`,r);var i=class extends n{static properties={selected:{type:Number},localCount:{type:Number},remoteCount:{type:Number},_toastMessage:{type:String,state:!0},_toastVisible:{type:Boolean,state:!0},_toastIsError:{type:Boolean,state:!0},_updatesVisible:{type:Boolean,state:!0}};static styles=t`
+    `}async loadPackages(){if(this.service){this._loading=!0;try{let e=await fetch(this.service,{method:`GET`,credentials:`same-origin`,headers:{Accept:`text/html`}});if(!e.ok)throw Error(`HTTP ${e.status}: ${e.statusText}`);let t=await e.text();await this.updateComplete;let n=this.shadowRoot.querySelector(`#itemList`);n.innerHTML=t;let r=n.querySelectorAll(`repo-icon[src]`);for(let e of r)e.style.backgroundImage=`url(${e.getAttribute(`src`)})`;let i=n.querySelectorAll(`repo-app[status="installed"][type="application"]`);for(let e of i)e.addEventListener(`click`,()=>{let t=e.getAttribute(`path`);t&&window.open(t)});this._packages=n.querySelectorAll(`repo-app`),this.count=this._packages.length,this.dispatchEvent(new CustomEvent(`packages-loaded`,{bubbles:!0,composed:!0,detail:{type:this.id}}))}catch{this.dispatchEvent(new CustomEvent(`packages-load-error`,{bubbles:!0,composed:!0,detail:{error:`loading of available packages failed`}}))}finally{this._loading=!1}}}getPackages(){return this._packages}};customElements.define(`existdb-packages`,r);var i=class extends n{static properties={selected:{type:Number},localCount:{type:Number},remoteCount:{type:Number},_toastMessage:{type:String,state:!0},_toastVisible:{type:Boolean,state:!0},_toastIsError:{type:Boolean,state:!0},_updatesVisible:{type:Boolean,state:!0}};static styles=t`
     :host {
       display: block;
       font-family: 'Roboto', 'Noto', sans-serif;
@@ -735,7 +816,7 @@ import{n as e,r as t,t as n}from"./chunks/existdb-launcher-app-CABln-uz.js";var 
       }
       50% { opacity: 0.3; }
     }
-  `;constructor(){super(),this.selected=0,this.users=[],this.groups=[],this.selectedUser=null,this.selectedGroup=null,this.mode=`edit`,this.apiBase=`/exist/apps/usermanager/`,this._toastMessage=``,this._toastError=!1,this._toastVisible=!1,this._confirmPassword=``}connectedCallback(){super.connectedCallback(),this._loadData()}_resolveApiUrl(e){return`${this.apiBase}${e}`}async _loadData(){await Promise.all([this._loadUsers(),this._loadGroups()])}async _loadUsers(){try{let e=await fetch(this._resolveApiUrl(`api/user/`),{credentials:`same-origin`});e.ok?this.users=await e.json():this._handleResponseError(e)}catch(e){this._showError(`Failed to load users: `+e.message)}}async _loadGroups(){try{let e=await fetch(this._resolveApiUrl(`api/group/`),{credentials:`same-origin`});e.ok?this.groups=await e.json():this._handleResponseError(e)}catch(e){this._showError(`Failed to load groups: `+e.message)}}_switchPage(e){(e===0||e===1)&&this._loadData(),this.selected=e}_handleAddUser(e){e.stopPropagation(),e.preventDefault(),this.selectedUser={user:``,fullName:``,description:``,password:``,disabled:!1,umask:`022`,groups:[]},this._confirmPassword=``,this._switchPage(2)}_editUser(e){this.selectedUser={...e},this.selectedUser.groups||(this.selectedUser.groups=[]),this._confirmPassword=``,this._switchPage(2)}_validateUserForm(){let e=this.renderRoot.querySelector(`#userInput`),t=/^[@.A-Za-z0-9_-]+$/,n=!0;return!this.selectedUser.user||!t.test(this.selectedUser.user)?(e?.classList.add(`invalid`),n=!1):e?.classList.remove(`invalid`),this.selectedUser.password&&this.selectedUser.password!==this._confirmPassword&&(n=!1),n}async _handleSaveUser(){if(!this._validateUserForm())return;let e=this._getSelectedUserGroups();this.selectedUser.groups=e;try{let e=await fetch(this._resolveApiUrl(`api/user/`+encodeURIComponent(this.selectedUser.user)),{method:`PUT`,credentials:`same-origin`,headers:{"Content-Type":`application/json`},body:JSON.stringify(this.selectedUser)});e.ok?(document.dispatchEvent(new CustomEvent(`checkUser`,{detail:{user:this.selectedUser.user,password:this.selectedUser.password}})),this._showToast(`User `+this.selectedUser.user+` has been saved.`),this._switchPage(0)):this._handleResponseError(e)}catch(e){this._showError(`Failed to save user: `+e.message)}}async _handleDeleteUser(){if(confirm(`Really delete this user?`))try{let e=await fetch(this._resolveApiUrl(`api/user/`+encodeURIComponent(this.selectedUser.user)),{method:`DELETE`,credentials:`same-origin`,headers:{"Content-Type":`application/json`}});e.ok?(this._showToast(`User `+this.selectedUser.user+` has been deleted.`),this._switchPage(0)):this._handleResponseError(e)}catch(e){this._showError(`Failed to delete user: `+e.message)}}_getSelectedUserGroups(){let e=this.renderRoot.querySelectorAll(`.user-group-select input[type="checkbox"]`),t=[];return e.forEach(e=>{e.checked&&t.push(e.value)}),t}_handleAddGroup(e){e.stopPropagation(),e.preventDefault(),this.selectedGroup={group:``,description:``,members:[]},this._switchPage(3)}_editGroup(e){this.selectedGroup={...e},this.selectedGroup.members||(this.selectedGroup.members=[]),this._switchPage(3)}async _handleSaveGroup(){let e=this.renderRoot,t=e.querySelector(`#groupInput`);if(!this.selectedGroup.group||!/^[@.A-Za-z0-9_-]+$/.test(this.selectedGroup.group)){t?.classList.add(`invalid`);return}t?.classList.remove(`invalid`);let n=e.querySelectorAll(`.group-member-select input[type="checkbox"].member-cb`),r=e.querySelectorAll(`.group-member-select input[type="checkbox"].manager-cb`),i=[];n.forEach((e,t)=>{if(e.checked){let n=r[t];i.push({member:e.value,isManager:n?n.checked:!1})}}),this.selectedGroup.members=i;try{let e=await fetch(this._resolveApiUrl(`api/group/`+encodeURIComponent(this.selectedGroup.group)),{method:`PUT`,credentials:`same-origin`,headers:{"Content-Type":`application/json`},body:JSON.stringify(this.selectedGroup)});e.ok?(this._showToast(`Group `+this.selectedGroup.group+` has been saved.`),this._switchPage(1)):this._handleResponseError(e)}catch(e){this._showError(`Failed to save group: `+e.message)}}async _handleDeleteGroup(){if(confirm(`Really delete this group?`))try{let e=await fetch(this._resolveApiUrl(`api/group/`+encodeURIComponent(this.selectedGroup.group)),{method:`DELETE`,credentials:`same-origin`,headers:{"Content-Type":`application/json`}});e.ok?(this._showToast(`Group `+this.selectedGroup.group+` has been deleted.`),this._switchPage(1)):this._handleResponseError(e)}catch(e){this._showError(`Failed to delete group: `+e.message)}}_isManager(e,t){return!t||!t.members?!1:t.members.some(t=>t.member===e&&t.isManager===!0)}_isMember(e,t){return!t||!t.members?!1:t.members.some(t=>t.member===e)}_showToast(e){this._toastMessage=e,this._toastError=!1,this._toastVisible=!0,setTimeout(()=>{this._toastVisible=!1},4e3)}_showError(e){this._toastMessage=e,this._toastError=!0,this._toastVisible=!0}_closeToast(){this._toastVisible=!1}async _handleResponseError(e){let t;if(e.status===403)t=`You don't have sufficient privileges to access UserManager`;else if(e.status===400){let n=await e.text().catch(()=>``);t=`Server responded: `+e.statusText+`: `+n}else t=`Server responded: `+e.status+` - `+e.statusText;this._showError(t)}_onUserFieldChange(e,t){this.selectedUser={...this.selectedUser,[e]:t.target.value}}_onGroupFieldChange(e,t){this.selectedGroup={...this.selectedGroup,[e]:t.target.value}}render(){return e`
+  `;constructor(){super(),this.selected=0,this.users=[],this.groups=[],this.selectedUser=null,this.selectedGroup=null,this.mode=`edit`,this.apiBase=`/exist/apps/dashboard/bower_components/existdb-usermanager/`,this._toastMessage=``,this._toastError=!1,this._toastVisible=!1,this._confirmPassword=``}connectedCallback(){super.connectedCallback(),this._loadData()}_resolveApiUrl(e){return`${this.apiBase}${e}`}async _loadData(){await Promise.all([this._loadUsers(),this._loadGroups()])}async _loadUsers(){try{let e=await fetch(this._resolveApiUrl(`api/user/`),{credentials:`same-origin`});e.ok?this.users=await e.json():this._handleResponseError(e)}catch(e){this._showError(`Failed to load users: `+e.message)}}async _loadGroups(){try{let e=await fetch(this._resolveApiUrl(`api/group/`),{credentials:`same-origin`});e.ok?this.groups=await e.json():this._handleResponseError(e)}catch(e){this._showError(`Failed to load groups: `+e.message)}}_switchPage(e){(e===0||e===1)&&this._loadData(),this.selected=e}_handleAddUser(e){e.stopPropagation(),e.preventDefault(),this.selectedUser={user:``,fullName:``,description:``,password:``,disabled:!1,umask:`022`,groups:[]},this._confirmPassword=``,this._switchPage(2)}_editUser(e){this.selectedUser={...e},this.selectedUser.groups||(this.selectedUser.groups=[]),this._confirmPassword=``,this._switchPage(2)}_validateUserForm(){let e=this.renderRoot.querySelector(`#userInput`),t=/^[@.A-Za-z0-9_-]+$/,n=!0;return!this.selectedUser.user||!t.test(this.selectedUser.user)?(e?.classList.add(`invalid`),n=!1):e?.classList.remove(`invalid`),this.selectedUser.password&&this.selectedUser.password!==this._confirmPassword&&(n=!1),n}async _handleSaveUser(){if(!this._validateUserForm())return;let e=this._getSelectedUserGroups();this.selectedUser.groups=e;try{let e=await fetch(this._resolveApiUrl(`api/user/`+encodeURIComponent(this.selectedUser.user)),{method:`PUT`,credentials:`same-origin`,headers:{"Content-Type":`application/json`},body:JSON.stringify(this.selectedUser)});e.ok?(document.dispatchEvent(new CustomEvent(`checkUser`,{detail:{user:this.selectedUser.user,password:this.selectedUser.password}})),this._showToast(`User `+this.selectedUser.user+` has been saved.`),this._switchPage(0)):this._handleResponseError(e)}catch(e){this._showError(`Failed to save user: `+e.message)}}async _handleDeleteUser(){if(confirm(`Really delete this user?`))try{let e=await fetch(this._resolveApiUrl(`api/user/`+encodeURIComponent(this.selectedUser.user)),{method:`DELETE`,credentials:`same-origin`,headers:{"Content-Type":`application/json`}});e.ok?(this._showToast(`User `+this.selectedUser.user+` has been deleted.`),this._switchPage(0)):this._handleResponseError(e)}catch(e){this._showError(`Failed to delete user: `+e.message)}}_getSelectedUserGroups(){let e=this.renderRoot.querySelectorAll(`.user-group-select input[type="checkbox"]`),t=[];return e.forEach(e=>{e.checked&&t.push(e.value)}),t}_handleAddGroup(e){e.stopPropagation(),e.preventDefault(),this.selectedGroup={group:``,description:``,members:[]},this._switchPage(3)}_editGroup(e){this.selectedGroup={...e},this.selectedGroup.members||(this.selectedGroup.members=[]),this._switchPage(3)}async _handleSaveGroup(){let e=this.renderRoot,t=e.querySelector(`#groupInput`);if(!this.selectedGroup.group||!/^[@.A-Za-z0-9_-]+$/.test(this.selectedGroup.group)){t?.classList.add(`invalid`);return}t?.classList.remove(`invalid`);let n=e.querySelectorAll(`.group-member-select input[type="checkbox"].member-cb`),r=e.querySelectorAll(`.group-member-select input[type="checkbox"].manager-cb`),i=[];n.forEach((e,t)=>{if(e.checked){let n=r[t];i.push({member:e.value,isManager:n?n.checked:!1})}}),this.selectedGroup.members=i;try{let e=await fetch(this._resolveApiUrl(`api/group/`+encodeURIComponent(this.selectedGroup.group)),{method:`PUT`,credentials:`same-origin`,headers:{"Content-Type":`application/json`},body:JSON.stringify(this.selectedGroup)});e.ok?(this._showToast(`Group `+this.selectedGroup.group+` has been saved.`),this._switchPage(1)):this._handleResponseError(e)}catch(e){this._showError(`Failed to save group: `+e.message)}}async _handleDeleteGroup(){if(confirm(`Really delete this group?`))try{let e=await fetch(this._resolveApiUrl(`api/group/`+encodeURIComponent(this.selectedGroup.group)),{method:`DELETE`,credentials:`same-origin`,headers:{"Content-Type":`application/json`}});e.ok?(this._showToast(`Group `+this.selectedGroup.group+` has been deleted.`),this._switchPage(1)):this._handleResponseError(e)}catch(e){this._showError(`Failed to delete group: `+e.message)}}_isManager(e,t){return!t||!t.members?!1:t.members.some(t=>t.member===e&&t.isManager===!0)}_isMember(e,t){return!t||!t.members?!1:t.members.some(t=>t.member===e)}_showToast(e){this._toastMessage=e,this._toastError=!1,this._toastVisible=!0,setTimeout(()=>{this._toastVisible=!1},4e3)}_showError(e){this._toastMessage=e,this._toastError=!0,this._toastVisible=!0}_closeToast(){this._toastVisible=!1}async _handleResponseError(e){let t;if(e.status===403)t=`You don't have sufficient privileges to access UserManager`;else if(e.status===400){let n=await e.text().catch(()=>``);t=`Server responded: `+e.statusText+`: `+n}else t=`Server responded: `+e.status+` - `+e.statusText;this._showError(t)}_onUserFieldChange(e,t){this.selectedUser={...this.selectedUser,[e]:t.target.value}}_onGroupFieldChange(e,t){this.selectedGroup={...this.selectedGroup,[e]:t.target.value}}render(){return e`
       ${this._renderUserListPage()}
       ${this._renderGroupListPage()}
       ${this._renderEditUserPage()}
@@ -1177,7 +1258,7 @@ import{n as e,r as t,t as n}from"./chunks/existdb-launcher-app-CABln-uz.js";var 
     .wrapper {
       padding-bottom: 50px;
     }
-  `;constructor(){super(),this.backups=[],this._loading=!1}connectedCallback(){super.connectedCallback(),this._loadBackups()}_resolveBasePath(){let e=window.location.pathname;return e.substring(0,e.lastIndexOf(`/`)+1)}async _loadBackups(){let e=this._resolveBasePath();try{let t=await fetch(`${e}modules/backup.xql`,{method:`GET`,credentials:`same-origin`});t.ok?this.backups=await t.json():console.error(`Failed to load backups:`,t.status,t.statusText)}catch(e){console.error(`An error occurred loading backups:`,e)}}async _trigger(){let e=this._resolveBasePath(),t=this.renderRoot.querySelector(`#zipCheckbox`).checked,n=this.renderRoot.querySelector(`#incCheckbox`).checked,r=new URLSearchParams;t&&r.set(`zip`,`on`),n&&r.set(`inc`,`on`),this._loading=!0;try{let t=await fetch(`${e}modules/backup.xql?action=trigger`,{method:`POST`,credentials:`same-origin`,headers:{"Content-Type":`application/x-www-form-urlencoded`},body:r.toString()});t.ok?await t.json():console.error(`Backup trigger failed:`,t.status,t.statusText)}catch(e){console.error(`An error occurred triggering backup:`,e)}finally{this._loading=!1,this._loadBackups()}}_getHref(e){return`${this._resolveBasePath()}modules/backup.xql?action=retrieve&archive=${encodeURIComponent(e)}`}_isDownloadable(e){return e.endsWith(`.zip`)}render(){return e`
+  `;constructor(){super(),this.backups=[],this._loading=!1}connectedCallback(){super.connectedCallback(),this._loadBackups()}_resolveBasePath(){return`/exist/apps/dashboard/bower_components/existdb-backup/`}async _loadBackups(){let e=this._resolveBasePath();try{let t=await fetch(`${e}modules/backup.xql`,{method:`GET`,credentials:`same-origin`});t.ok?this.backups=await t.json():console.error(`Failed to load backups:`,t.status,t.statusText)}catch(e){console.error(`An error occurred loading backups:`,e)}}async _trigger(){let e=this._resolveBasePath(),t=this.renderRoot.querySelector(`#zipCheckbox`).checked,n=this.renderRoot.querySelector(`#incCheckbox`).checked,r=new URLSearchParams;t&&r.set(`zip`,`on`),n&&r.set(`inc`,`on`),this._loading=!0;try{let t=await fetch(`${e}modules/backup.xql?action=trigger`,{method:`POST`,credentials:`same-origin`,headers:{"Content-Type":`application/x-www-form-urlencoded`},body:r.toString()});t.ok?await t.json():console.error(`Backup trigger failed:`,t.status,t.statusText)}catch(e){console.error(`An error occurred triggering backup:`,e)}finally{this._loading=!1,this._loadBackups()}}_getHref(e){return`${this._resolveBasePath()}modules/backup.xql?action=retrieve&archive=${encodeURIComponent(e)}`}_isDownloadable(e){return e.endsWith(`.zip`)}render(){return e`
       ${this._loading?e`
         <div class="backdrop">
           <div class="spinner"></div>
@@ -1418,17 +1499,16 @@ import{n as e,r as t,t as n}from"./chunks/existdb-launcher-app-CABln-uz.js";var 
     }
 
     .nav-item .icon {
-      width: 36px;
-      height: 36px;
-      margin-right: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
+      width: 24px;
+      height: 24px;
+      min-width: 24px;
+      margin-right: 12px;
+      display: block;
+      color: #757575;
     }
 
-    .nav-item img.icon {
-      object-fit: contain;
+    .nav-item.active .icon {
+      color: #1976d2;
     }
 
     /* Main content area */
@@ -1491,44 +1571,42 @@ import{n as e,r as t,t as n}from"./chunks/existdb-launcher-app-CABln-uz.js";var 
           <button class="nav-item ${t===`launcher`?`active`:``}"
                   id="launcherItem" role="menuitem"
                   @click=${()=>this._navigate(`launcher`)}>
-            <img class="icon" src="resources/images/launcher.svg" alt="">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z" fill="currentColor"/></svg>
             <span>Launcher</span>
           </button>
 
           <button class="nav-item ${t===`packagemanager`?`active`:``}"
                   id="packageManagerItem" role="menuitem"
                   @click=${()=>this._navigate(`packagemanager`)}>
-            <span class="icon">&#x2b1a;</span>
+            <svg class="icon" viewBox="0 0 24 24"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z" fill="currentColor"/></svg>
             <span>Package Manager</span>
           </button>
 
           <button class="nav-item ${t===`usermanager`?`active`:``}"
                   id="userManagerItem" role="menuitem"
                   @click=${()=>this._navigate(`usermanager`)}>
-            <span class="icon">&#x1f465;</span>
+            <svg class="icon" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" fill="currentColor"/></svg>
             <span>User Manager</span>
           </button>
 
           <button class="nav-item ${t===`backup`?`active`:``}"
                   id="backupItem" role="menuitem"
                   @click=${()=>this._navigate(`backup`)}>
-            <span class="icon">&#x21bb;</span>
+            <svg class="icon" viewBox="0 0 24 24"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z" fill="currentColor"/></svg>
             <span>Backup</span>
           </button>
 
           <button class="nav-item ${t===`settings`?`active`:``}"
                   id="settingsItem" role="menuitem"
                   @click=${()=>this._navigate(`settings`)}>
-            <span class="icon">&#x2699;</span>
+            <svg class="icon" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" fill="currentColor"/></svg>
             <span>Settings</span>
           </button>
 
           <button class="nav-item" id="logout" role="menuitem"
                   @click=${this._logout}>
-            <img class="icon" src="resources/images/logout.svg" alt="">
-            <existdb-login class="menuitem" login-label="Login" logout-label="Logout" group="dba"
-                login-url="admin#" logout-url="index.html"
-                logout-icon="" login-icon=""></existdb-login>
+            <svg class="icon" viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" fill="currentColor"/></svg>
+            <span>Logout admin</span>
           </button>
         </nav>
 

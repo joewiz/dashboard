@@ -219,8 +219,7 @@ class ExistdbBackup extends LitElement {
   }
 
   _resolveBasePath() {
-    const path = window.location.pathname
-    return path.substring(0, path.lastIndexOf('/') + 1)
+    return '/exist/apps/dashboard/bower_components/existdb-backup/'
   }
 
   async _loadBackups() {
