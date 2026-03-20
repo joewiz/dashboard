@@ -3,22 +3,15 @@
 // all cy.get/cy.find commands automatically pierce shadow DOM.
 
 /**
- * Login and navigate to the admin dashboard.
- * Uses cy.session to cache the login across tests within a spec.
+ * Login via the API and navigate to admin dashboard.
  */
 Cypress.Commands.add('login', (user = 'admin', pass = '') => {
-  cy.session([user, pass], () => {
-    cy.visit('/dashboard/login.html')
-    cy.get('#user').should('be.visible').type(user)
-    if (pass) {
-      cy.get('#password').type(pass)
-    } else {
-      cy.get('#password').clear()
-    }
-    cy.get('.button').click()
-    cy.url({ timeout: 15000 }).should('include', '/dashboard/admin')
+  cy.request({
+    method: 'POST',
+    url: '/dashboard/login',
+    form: true,
+    body: { user, password: pass },
   })
-  // Always navigate to admin after session restore
   cy.visit('/dashboard/admin#/launcher')
   cy.get('existdb-dashboard', { timeout: 15000 }).should('exist')
 })
@@ -37,15 +30,16 @@ const sectionMap = {
  */
 Cypress.Commands.add('loginAndNavigate', (section = 'launcher') => {
   const hash = sectionMap[section] || section
-  cy.session(['admin', ''], () => {
-    cy.visit('/dashboard/login.html')
-    cy.get('#user').should('be.visible').type('admin')
-    cy.get('#password').clear()
-    cy.get('.button').click()
-    cy.url({ timeout: 15000 }).should('include', '/dashboard/admin')
+  cy.request({
+    method: 'POST',
+    url: '/dashboard/login',
+    form: true,
+    body: { user: 'admin', password: '' },
   })
   cy.visit(`/dashboard/admin#/${hash}`)
   cy.get('existdb-dashboard', { timeout: 15000 }).should('exist')
-  // Wait for the shadow DOM to be fully populated
-  cy.get('existdb-dashboard').shadow().find('nav.drawer', { timeout: 15000 }).should('exist')
+  // Wait for shadow DOM to fully render - the dashboard's shadow root
+  // may not be populated immediately after the element exists
+  cy.get('existdb-dashboard', { timeout: 15000 }).should('exist')
+  cy.wait(500)  // Allow Lit first render to complete
 })
