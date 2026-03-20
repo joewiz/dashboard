@@ -5,45 +5,63 @@
  * Related issues: #129 (side panel visibility)
  */
 describe('Admin Navigation', () => {
-  beforeEach(() => {
-    cy.login()
-    cy.visit('/dashboard/admin#/launcher')
-    cy.get('existdb-dashboard', { timeout: 15000 }).should('exist')
-    cy.get('paper-item#launcherItem', { timeout: 15000 }).should('exist')
+  describe('Default Route', () => {
+    it('defaults to the launcher view after login', () => {
+      cy.login()
+      cy.url().should('include', 'admin#/launcher')
+    })
   })
 
-  it('defaults to the launcher view after login', () => {
-    cy.url().should('include', 'admin#/launcher')
-  })
+  describe('Sidebar Click Navigation', () => {
+    beforeEach(() => {
+      cy.loginAndNavigate('launcher')
+    })
 
-  it('navigates to Package Manager via sidebar click', () => {
-    cy.get('paper-item#packageManagerItem').click({ force: true })
-    cy.url({ timeout: 15000 }).should('include', 'admin#/packagemanager')
-  })
+    it('navigates to Package Manager via sidebar click', () => {
+      cy.get('existdb-dashboard', { timeout: 15000 })
+        .shadow()
+        .find('button#packageManagerItem', { timeout: 15000 })
+        .click()
+      cy.url({ timeout: 15000 }).should('include', 'admin#/packagemanager')
+    })
 
-  it('navigates to User Manager via sidebar click', () => {
-    cy.get('paper-item#userManagerItem').click({ force: true })
-    cy.url({ timeout: 15000 }).should('include', 'admin#/usermanager')
-  })
+    it('navigates to User Manager via sidebar click', () => {
+      cy.get('existdb-dashboard')
+        .shadow()
+        .find('button#userManagerItem', { timeout: 15000 })
+        .click()
+      cy.url({ timeout: 15000 }).should('include', 'admin#/usermanager')
+    })
 
-  it('navigates to Backup via sidebar click', () => {
-    cy.get('paper-item#backupItem').click({ force: true })
-    cy.url({ timeout: 15000 }).should('include', 'admin#/backup')
-  })
+    it('navigates to Backup via sidebar click', () => {
+      cy.get('existdb-dashboard')
+        .shadow()
+        .find('button#backupItem', { timeout: 15000 })
+        .click()
+      cy.url({ timeout: 15000 }).should('include', 'admin#/backup')
+    })
 
-  it('navigates to Settings via sidebar click', () => {
-    cy.get('paper-item#settingsItem').click({ force: true })
-    cy.url({ timeout: 15000 }).should('include', 'admin#/settings')
-  })
+    it('navigates to Settings via sidebar click', () => {
+      cy.get('existdb-dashboard')
+        .shadow()
+        .find('button#settingsItem', { timeout: 15000 })
+        .click()
+      cy.url({ timeout: 15000 }).should('include', 'admin#/settings')
+    })
 
-  it('navigates back to Launcher from Settings', () => {
-    cy.get('paper-item#settingsItem').click({ force: true })
-    cy.url({ timeout: 15000 }).should('include', 'admin#/settings')
-    cy.get('paper-item#launcherItem').click({ force: true })
-    cy.url({ timeout: 15000 }).should('include', 'admin#/launcher')
+    it('navigates back to Launcher from Settings', () => {
+      cy.get('existdb-dashboard').shadow().find('button#settingsItem', { timeout: 15000 }).click()
+      cy.url({ timeout: 15000 }).should('include', 'admin#/settings')
+      cy.get('existdb-dashboard').shadow().find('button#launcherItem').click()
+      cy.url({ timeout: 15000 }).should('include', 'admin#/launcher')
+    })
   })
 
   describe('Bookmarkable Routes (Direct URL Access)', () => {
+    beforeEach(() => {
+      cy.loginAndNavigate('launcher')
+    })
+
     it('loads Package Manager directly', () => {
       cy.visit('/dashboard/admin#/packagemanager')
       cy.get('existdb-packagemanager', { timeout: 15000 }).should('exist')

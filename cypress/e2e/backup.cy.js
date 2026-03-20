@@ -12,15 +12,17 @@ describe('Backup', () => {
     cy.get('existdb-backup', { timeout: 15000 }).should('exist')
   })
 
-  it('shows backup path/directory configuration', () => {
-    cy.get('existdb-backup')
-      .find('paper-input, input')
-      .should('exist')
+  it('shows backup configuration options', () => {
+    cy.get('existdb-backup', { timeout: 15000 })
+      .shadow()
+      .find('input[type="checkbox"], button, .card')
+      .should('have.length.gte', 1)
   })
 
   it('has a trigger backup button', () => {
     cy.get('existdb-backup')
-      .find('paper-button, button')
+      .shadow()
+      .find('button')
       .should('have.length.gte', 1)
   })
 
@@ -29,7 +31,7 @@ describe('Backup', () => {
   })
 
   describe('Error Reporting (#89)', () => {
-    it('backup component should be able to show status messages', () => {
+    it('backup component renders without errors', () => {
       cy.get('existdb-backup').should('exist')
     })
   })

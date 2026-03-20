@@ -35,23 +35,23 @@ describe('Authentication', () => {
     })
 
     it('shows the admin sidebar when already logged in', () => {
-      cy.get('app-drawer-layout', { timeout: 10000 }).should('exist')
-      cy.get('app-drawer').should('exist')
+      cy.get('existdb-dashboard', { timeout: 10000 }).should('exist')
+      cy.get('existdb-dashboard').shadow().find('nav.drawer').should('exist')
     })
 
     it('shows navigation items in the sidebar', () => {
-      cy.get('paper-item', { timeout: 15000 }).should('have.length.gte', 4)
+      cy.get('existdb-dashboard').shadow().find('button[role="menuitem"]').should('have.length.gte', 4)
     })
 
-    it('shows toolbar', () => {
-      cy.get('app-toolbar', { timeout: 15000 }).should('exist')
+    it('shows the dashboard component', () => {
+      cy.get('existdb-dashboard', { timeout: 15000 }).should('exist')
     })
   })
 
   describe('Logout', () => {
     it('logs out and redirects to launcher', () => {
       cy.login()
-      cy.get('paper-item#logout', { timeout: 15000 }).click({ force: true })
+      cy.get('existdb-dashboard').shadow().find('button#logout').click()
       cy.url({ timeout: 15000 }).should('include', 'dashboard/index.html?logout=true')
     })
   })

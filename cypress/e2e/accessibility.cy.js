@@ -40,15 +40,15 @@ describe('Accessibility', () => {
     })
 
     it('sidebar navigation items exist and are interactive', () => {
-      cy.get('paper-item', { timeout: 15000 }).should('have.length.gte', 4)
+      cy.get('existdb-dashboard').shadow().find('button[role="menuitem"]').should('have.length.gte', 4)
     })
 
     it('sidebar items have ids for bookmarking', () => {
-      cy.get('paper-item#launcherItem', { timeout: 15000 }).should('exist')
+      cy.get('existdb-dashboard').shadow().find('button#launcherItem').should('exist')
     })
 
-    it('sidebar items have role attributes', () => {
-      cy.get('paper-item[role]', { timeout: 15000 }).should('have.length.gte', 4)
+    it('navigation uses semantic nav element', () => {
+      cy.get('existdb-dashboard').shadow().find('nav').should('exist')
     })
   })
 })
