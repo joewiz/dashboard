@@ -1,0 +1,106 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        exist-image:
+          - existdb/existdb:latest
+          - existdb/existdb:release
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 11
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Install global tools
+        run: npm install -g polymer-cli bower
+
+      - name: Install Bower components
+        run: bower install --allow-root
+
+      - name: Build production XAR
+        run: ant production-xar
+
+      - name: Start eXist-db
+        run: |
+          docker pull ${{ matrix.exist-image }}
+          docker create --name exist-ci -p 8080:8080 ${{ matrix.exist-image }}
+          docker cp build/dashboard-*.xar exist-ci:exist/autodeploy
+          docker start exist-ci
+
+      - name: Wait for eXist-db to start
+        run: |
+          echo "Waiting for eXist-db to become ready..."
+          for i in $(seq 1 60); do
+            if curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/exist/ | grep -q "200\|302"; then
+              echo "eXist-db is ready after ${i}s"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "eXist-db failed to start within 60s"
+          docker logs exist-ci
+          exit 1
+
+      - name: Run Cypress E2E tests
+        uses: cypress-io/github-action@v6
+        with:
+          install: false
+          wait-on: http://localhost:8080/exist/apps/dashboard/index.html
+          wait-on-timeout: 60
+
+      - name: Upload Cypress screenshots on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-screenshots-${{ strategy.job-index }}
+          path: cypress/screenshots
+          if-no-files-found: ignore
+
+      - name: Upload Cypress videos
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-videos-${{ strategy.job-index }}
+          path: cypress/videos
+          if-no-files-found: ignore
+
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run npm audit
+        run: npm audit --audit-level=critical
+        continue-on-error: true
