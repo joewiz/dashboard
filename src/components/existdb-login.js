@@ -141,6 +141,10 @@ class ExistdbLogin extends LitElement {
       this._checkLogin({ logout: this.user })
     } else {
       this._dialogOpen = true
+      this.updateComplete.then(() => {
+        const userInput = this.shadowRoot.querySelector('input[type="text"]')
+        if (userInput) userInput.focus()
+      })
     }
   }
 
@@ -181,6 +185,7 @@ class ExistdbLogin extends LitElement {
 
   _handleKeyup(ev) {
     if (ev.keyCode === 13) this._confirmLogin()
+    if (ev.keyCode === 27) this._dialogOpen = false
   }
 
   _onUserInput(ev) { this.user = ev.target.value }

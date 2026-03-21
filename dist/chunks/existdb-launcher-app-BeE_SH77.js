@@ -58,7 +58,7 @@ var e=globalThis,t=e.ShadowRoot&&(e.ShadyCSS===void 0||e.ShadyCSS.nativeShadow)&
     a, a:link { text-decoration: none; color: inherit; cursor: pointer; }
     #message { color: #c62828; margin-top: 8px; }
     @media (max-width: 1024px) { .label { display: none; } }
-  `;constructor(){super(),this.loggedIn=!1,this.user=``,this.group=``,this.groups=[],this.auto=!1,this.loginLabel=`Login`,this.logoutLabel=`Logout`,this.loginIcon=``,this.logoutIcon=``,this.password=``,this.loginUrl=``,this.logoutUrl=``,this._invalid=!1,this._dialogOpen=!1,this._hasFocus=!0}connectedCallback(){super.connectedCallback(),this._boundBlur=()=>{this._hasFocus=!1},this._boundFocus=()=>{this._hasFocus||(this._hasFocus=!0,this._checkLogin())},window.addEventListener(`blur`,this._boundBlur),window.addEventListener(`focus`,this._boundFocus),document.addEventListener(`checkUser`,e=>{e.detail.user===this.user&&(this.password=e.detail.password,this._confirmLogin())}),this._checkLogin()}disconnectedCallback(){super.disconnectedCallback(),window.removeEventListener(`blur`,this._boundBlur),window.removeEventListener(`focus`,this._boundFocus)}async _checkLogin(e=null){try{let t=await(await fetch(`/exist/apps/dashboard/login`,{method:`POST`,credentials:`same-origin`,headers:{"Content-Type":`application/x-www-form-urlencoded`},body:e?new URLSearchParams(e):null})).json();this._handleResponse(t)}catch(e){console.warn(`Login check failed:`,e)}}_show(e){e.preventDefault(),this.loggedIn?this._checkLogin({logout:this.user}):this._dialogOpen=!0}_confirmLogin(){this._checkLogin({user:this.user,password:this.password,duration:`P7D`})}_handleResponse(e){let t=this.loggedIn;e.user&&this._checkGroup(e)?(this.loggedIn=!0,this.user=e.user,this.groups=e.groups||[],this._invalid=!1,!t&&this.loginUrl&&(window.location=this.loginUrl),this._dialogOpen=!1):(this.loggedIn=!1,this.password=``,this._dialogOpen?this._invalid=!0:this.auto?this._dialogOpen=!0:t&&this.logoutUrl&&(window.location=this.logoutUrl))}_checkGroup(e){return this.group?e.groups&&e.groups.indexOf(this.group)>-1:!0}_handleKeyup(e){e.keyCode===13&&this._confirmLogin()}_onUserInput(e){this.user=e.target.value}_onPasswordInput(e){this.password=e.target.value}render(){return V`
+  `;constructor(){super(),this.loggedIn=!1,this.user=``,this.group=``,this.groups=[],this.auto=!1,this.loginLabel=`Login`,this.logoutLabel=`Logout`,this.loginIcon=``,this.logoutIcon=``,this.password=``,this.loginUrl=``,this.logoutUrl=``,this._invalid=!1,this._dialogOpen=!1,this._hasFocus=!0}connectedCallback(){super.connectedCallback(),this._boundBlur=()=>{this._hasFocus=!1},this._boundFocus=()=>{this._hasFocus||(this._hasFocus=!0,this._checkLogin())},window.addEventListener(`blur`,this._boundBlur),window.addEventListener(`focus`,this._boundFocus),document.addEventListener(`checkUser`,e=>{e.detail.user===this.user&&(this.password=e.detail.password,this._confirmLogin())}),this._checkLogin()}disconnectedCallback(){super.disconnectedCallback(),window.removeEventListener(`blur`,this._boundBlur),window.removeEventListener(`focus`,this._boundFocus)}async _checkLogin(e=null){try{let t=await(await fetch(`/exist/apps/dashboard/login`,{method:`POST`,credentials:`same-origin`,headers:{"Content-Type":`application/x-www-form-urlencoded`},body:e?new URLSearchParams(e):null})).json();this._handleResponse(t)}catch(e){console.warn(`Login check failed:`,e)}}_show(e){e.preventDefault(),this.loggedIn?this._checkLogin({logout:this.user}):(this._dialogOpen=!0,this.updateComplete.then(()=>{let e=this.shadowRoot.querySelector(`input[type="text"]`);e&&e.focus()}))}_confirmLogin(){this._checkLogin({user:this.user,password:this.password,duration:`P7D`})}_handleResponse(e){let t=this.loggedIn;e.user&&this._checkGroup(e)?(this.loggedIn=!0,this.user=e.user,this.groups=e.groups||[],this._invalid=!1,!t&&this.loginUrl&&(window.location=this.loginUrl),this._dialogOpen=!1):(this.loggedIn=!1,this.password=``,this._dialogOpen?this._invalid=!0:this.auto?this._dialogOpen=!0:t&&this.logoutUrl&&(window.location=this.logoutUrl))}_checkGroup(e){return this.group?e.groups&&e.groups.indexOf(this.group)>-1:!0}_handleKeyup(e){e.keyCode===13&&this._confirmLogin(),e.keyCode===27&&(this._dialogOpen=!1)}_onUserInput(e){this.user=e.target.value}_onPasswordInput(e){this.password=e.target.value}render(){return V`
       <a href="#" id="login" @click=${this._show} title="${this.user}">
         ${this.loggedIn?V`<span class="label">${this.logoutLabel} ${this.user}</span>`:V`<span class="label">${this.loginLabel}</span>`}
       </a>
@@ -140,6 +140,7 @@ var e=globalThis,t=e.ShadowRoot&&(e.ShadyCSS===void 0||e.ShadyCSS.nativeShadow)&
       display: block;
       position: relative;
       background: ghostwhite;
+      min-height: 100%;
     }
     .apps repo-packages {
       display: flex;
@@ -200,8 +201,9 @@ var e=globalThis,t=e.ShadowRoot&&(e.ShadyCSS===void 0||e.ShadyCSS.nativeShadow)&
       display: block;
       width: 100%;
       height: 100%;
+      min-height: 100%;
       margin: 0;
-      padding: 30px;
+      padding: 0;
       font-family: 'Roboto', 'Noto', sans-serif;
       box-sizing: border-box;
       background: ghostwhite;
@@ -213,7 +215,7 @@ var e=globalThis,t=e.ShadowRoot&&(e.ShadyCSS===void 0||e.ShadyCSS.nativeShadow)&
       height: 60px;
       display: flex;
       align-items: center;
-      margin: -30px -30px 0 -30px;
+      margin: 0;
     }
     .header .icon {
       margin-right: 10px;

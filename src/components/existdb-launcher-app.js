@@ -12,8 +12,9 @@ class ExistdbLauncherApp extends LitElement {
       display: block;
       width: 100%;
       height: 100%;
+      min-height: 100%;
       margin: 0;
-      padding: 30px;
+      padding: 0;
       font-family: 'Roboto', 'Noto', sans-serif;
       box-sizing: border-box;
       background: ghostwhite;
@@ -25,7 +26,7 @@ class ExistdbLauncherApp extends LitElement {
       height: 60px;
       display: flex;
       align-items: center;
-      margin: -30px -30px 0 -30px;
+      margin: 0;
     }
     .header .icon {
       margin-right: 10px;

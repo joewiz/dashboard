@@ -1,4 +1,4 @@
-import{n as e,r as t,t as n}from"./chunks/existdb-launcher-app-C-asUdrG.js";var r=class extends n{static properties={service:{type:String,reflect:!0},autoLoad:{type:Boolean,attribute:`auto-load`},count:{type:Number,reflect:!0},_loading:{type:Boolean,state:!0}};static styles=t`
+import{n as e,r as t,t as n}from"./chunks/existdb-launcher-app-BeE_SH77.js";var r=class extends n{static properties={service:{type:String,reflect:!0},autoLoad:{type:Boolean,attribute:`auto-load`},count:{type:Number,reflect:!0},_loading:{type:Boolean,state:!0}};static styles=t`
     :host {
       position: relative;
       background: whitesmoke;

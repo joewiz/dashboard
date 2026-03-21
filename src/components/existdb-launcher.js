@@ -13,6 +13,7 @@ class ExistdbLauncher extends LitElement {
       display: block;
       position: relative;
       background: ghostwhite;
+      min-height: 100%;
     }
     .apps repo-packages {
       display: flex;
