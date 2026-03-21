@@ -22,7 +22,7 @@ declare function local:user-allowed ($user) as xs:boolean {
     )
 };
 
-let $login := login:set-user($local:login-domain, (), false())
+let $login := login:set-user($local:login-domain, xs:dayTimeDuration("P7D"), false())
 let $user := request:get-attribute($local:login-domain || ".user")
 (:
 let $log := util:log("info", "root " || $exist:root)

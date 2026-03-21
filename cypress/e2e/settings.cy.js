@@ -2,7 +2,7 @@
  * Settings Panel Tests
  */
 describe('Settings', () => {
-  before(() => {
+  beforeEach(() => {
     cy.loginAndNavigate('settings')
   })
 
@@ -13,13 +13,15 @@ describe('Settings', () => {
   it('shows version information', () => {
     cy.get('existdb-settings', { timeout: 15000 })
       .shadow()
-      .find('.highlight', { timeout: 10000 })
+      .find('.card', { timeout: 10000 })
       .first()
-      .should('not.be.empty')
+      .should('contain.text', 'Version')
   })
 
-  it('shows the public repository URL', () => {
-    cy.get('existdb-settings')
-      .should('not.be.empty')
+  it('shows the public repository URL section', () => {
+    cy.get('existdb-settings', { timeout: 15000 })
+      .shadow()
+      .find('.card')
+      .should('have.length.gte', 2)
   })
 })

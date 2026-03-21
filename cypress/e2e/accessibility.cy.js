@@ -35,7 +35,7 @@ describe('Accessibility', () => {
   })
 
   describe('Admin Page - Keyboard Navigation (#106)', () => {
-    before(() => {
+    beforeEach(() => {
       cy.login()
     })
 

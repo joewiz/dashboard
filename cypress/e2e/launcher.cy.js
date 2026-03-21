@@ -26,11 +26,18 @@ describe('Launcher (Public Page)', () => {
   })
 
   it('has a login link in the toolbar', () => {
-    cy.get('a#login').should('exist')
+    cy.get('existdb-login', { timeout: 10000 }).should('exist')
   })
 
-  it('navigates to login page when login is clicked', () => {
-    cy.get('a#login').click()
-    cy.url().should('include', '/dashboard/login.html')
+  it('login link opens a dialog when clicked', () => {
+    cy.get('existdb-login', { timeout: 10000 })
+      .shadow()
+      .find('a#login')
+      .click({ force: true })
+    // Dialog should open inside the login component
+    cy.get('existdb-login')
+      .shadow()
+      .find('.dialog-overlay[open]', { timeout: 5000 })
+      .should('exist')
   })
 })

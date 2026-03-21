@@ -250,7 +250,7 @@ else if (contains(request:get-uri(), "bower_components")) then
 :)
 
 else if (ends-with($exist:path, "index.html")) then (
-        login:set-user("org.exist.login", (), true()),
+        login:set-user("org.exist.login", xs:dayTimeDuration("P7D"), true()),
         let $user := request:get-attribute("org.exist.login.user")
         let $userParam := request:get-parameter("user","")
         let $signout := request:get-parameter("logout",())
@@ -273,7 +273,7 @@ else if (ends-with($exist:path, "index.html")) then (
     )
 else if(starts-with($exist:path, "/api/"))then(
         util:declare-option("exist:serialize", "method=json media-type=application/json"),
-        login:set-user("org.exist.login", (), false()),
+        login:set-user("org.exist.login", xs:dayTimeDuration("P7D"), false()),
         let $user := request:get-attribute("org.exist.login.user")
         return
 
@@ -319,11 +319,11 @@ else if(starts-with($exist:path, "/api/"))then(
 
 
         else if($exist:path eq "/api/group/")then (
-                login:set-user("org.exist.login", (), false()),
+                login:set-user("org.exist.login", xs:dayTimeDuration("P7D"), false()),
                 local:list-groups(request:get-parameter("group", ()))
             )
             else if(starts-with($exist:path, "/api/group/"))then (
-                    login:set-user("org.exist.login", (), false()),
+                    login:set-user("org.exist.login", xs:dayTimeDuration("P7D"), false()),
                     let $group := replace($exist:path, "/api/group/", "") return
 
                         if(request:get-method() eq "DELETE")then

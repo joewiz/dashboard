@@ -5,7 +5,7 @@
  *   #110 (data package type), #240 (progress indicator)
  */
 describe('Package Manager', () => {
-  before(() => {
+  beforeEach(() => {
     cy.loginAndNavigate('packageManager')
   })
 
@@ -15,7 +15,7 @@ describe('Package Manager', () => {
     })
 
     it('has installed and available tabs', () => {
-      cy.get('existdb-packagemanager')
+      cy.get('existdb-packagemanager', { timeout: 15000 })
         .shadow()
         .find('button, .tab')
         .should('have.length.gte', 2)
@@ -28,14 +28,13 @@ describe('Package Manager', () => {
     })
 
     it('loads packages from the service', () => {
-      // Verify the packages container renders
       cy.get('existdb-packages', { timeout: 15000 }).should('exist')
     })
   })
 
   describe('Filter', () => {
     it('has a filter input', () => {
-      cy.get('existdb-packagemanager')
+      cy.get('existdb-packagemanager', { timeout: 15000 })
         .shadow()
         .find('input[type="text"]')
         .should('exist')
@@ -44,7 +43,7 @@ describe('Package Manager', () => {
 
   describe('Upload', () => {
     it('has a file upload mechanism', () => {
-      cy.get('existdb-packagemanager')
+      cy.get('existdb-packagemanager', { timeout: 15000 })
         .shadow()
         .find('input[type="file"]')
         .should('exist')

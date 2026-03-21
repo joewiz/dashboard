@@ -4,7 +4,7 @@
  * Related issues: #89 (no error reporting), #210 (add restore), #213 (update defaults)
  */
 describe('Backup', () => {
-  before(() => {
+  beforeEach(() => {
     cy.loginAndNavigate('backup')
   })
 
@@ -30,9 +30,7 @@ describe('Backup', () => {
     cy.get('existdb-backup').should('exist')
   })
 
-  describe('Error Reporting (#89)', () => {
-    it('backup component renders without errors', () => {
-      cy.get('existdb-backup').should('exist')
-    })
+  it('backup component renders without errors', () => {
+    cy.get('existdb-backup').should('exist')
   })
 })
